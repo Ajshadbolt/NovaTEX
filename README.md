@@ -4,13 +4,15 @@ NovaTeX is a minimalist LaTeX editor for macOS built with Tauri, React, and Code
 
 It provides a clean writing experience with local LaTeX compilation and integrated PDF preview.
 
-## Download and use
+## Download and install (macOS)
 
-You can download the built macOS app bundle from:
+The easiest way to install NovaTeX is from the DMG file in GitHub Releases:
 
-- `src-tauri/target/release/bundle/macos/NovaTeX.app`
+- [Download the latest DMG](https://github.com/Ajshadbolt/NovaTEX/releases/latest)
 
-If you clone this repository, you can open that app directly on macOS.
+Open the DMG, drag `NovaTeX.app` into `Applications`, then open it.
+
+If macOS shows an unsigned app warning, right-click the app, choose **Open**, then confirm.
 
 ## Features
 
@@ -43,6 +45,7 @@ Build outputs are generated in:
 
 - `dist/`
 - `src-tauri/target/release/bundle/macos/NovaTeX.app`
+- `src-tauri/target/release/bundle/dmg/NovaTeX_0.1.0_aarch64.dmg`
 
 ## License
 

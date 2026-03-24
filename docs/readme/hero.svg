@@ -1,0 +1,92 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="140" y1="72" x2="1142" y2="650" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="0.52" stop-color="#111827"/>
+      <stop offset="1" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="card" x1="716" y1="136" x2="1086" y2="582" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F2937"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#22C55E"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+    <filter id="shadow" x="496" y="82" width="666" height="534" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="14"/>
+      <feGaussianBlur stdDeviation="24"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0196 0 0 0 0 0.0314 0 0 0 0 0.0667 0 0 0 0.42 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="720" rx="28" fill="url(#bg)"/>
+  <circle cx="1076" cy="88" r="164" fill="#14B8A6" fill-opacity="0.12"/>
+  <circle cx="158" cy="614" r="220" fill="#22C55E" fill-opacity="0.08"/>
+
+  <g opacity="0.88">
+    <rect x="100" y="112" width="88" height="88" rx="24" fill="#0B1220" stroke="#334155" stroke-width="2"/>
+    <path d="M126 175L144.5 137L163 175H155.4L151.8 166.8H136.1L132.5 175H126ZM138.9 160.6H149.1L144 149L138.9 160.6Z" fill="url(#accent)"/>
+    <rect x="170" y="132" width="6" height="48" rx="3" fill="#E5E7EB"/>
+  </g>
+
+  <text x="100" y="274" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="68" font-weight="700">NovaTeX</text>
+  <text x="100" y="324" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="24">A focused LaTeX workspace for macOS</text>
+
+  <text x="100" y="392" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="22">Write, compile, and preview locally with a fast editor and side-by-side PDF output.</text>
+  <text x="100" y="428" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="22">Built with Tauri, React, and CodeMirror for a lightweight native-feeling desktop app.</text>
+
+  <g>
+    <rect x="100" y="488" width="170" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
+    <circle cx="128" cy="511" r="8" fill="#22C55E"/>
+    <text x="146" y="518" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Local-first</text>
+
+    <rect x="284" y="488" width="210" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
+    <circle cx="312" cy="511" r="8" fill="#14B8A6"/>
+    <text x="330" y="518" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Native PDF preview</text>
+
+    <rect x="100" y="550" width="222" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
+    <circle cx="128" cy="573" r="8" fill="#F59E0B"/>
+    <text x="146" y="580" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Cmd/Ctrl + Enter compile</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="544" y="116" width="570" height="438" rx="24" fill="#0B1220" stroke="#1F2937"/>
+    <rect x="544" y="116" width="570" height="42" rx="24" fill="#111827"/>
+    <circle cx="578" cy="137" r="7" fill="#FB7185"/>
+    <circle cx="602" cy="137" r="7" fill="#FBBF24"/>
+    <circle cx="626" cy="137" r="7" fill="#34D399"/>
+
+    <rect x="568" y="178" width="138" height="340" rx="16" fill="#0F172A" stroke="#1E293B"/>
+    <text x="590" y="212" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="16">Project Files</text>
+    <text x="590" y="254" fill="#E2E8F0" font-family="Consolas, monospace" font-size="16">main.tex</text>
+    <text x="590" y="286" fill="#64748B" font-family="Consolas, monospace" font-size="16">figures/</text>
+    <text x="590" y="318" fill="#64748B" font-family="Consolas, monospace" font-size="16">references.bib</text>
+
+    <rect x="724" y="178" width="188" height="340" rx="16" fill="#111827" stroke="#1F2937"/>
+    <text x="748" y="214" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="15">main.tex</text>
+    <text x="748" y="254" fill="#60A5FA" font-family="Consolas, monospace" font-size="14">\documentclass{article}</text>
+    <text x="748" y="282" fill="#D1D5DB" font-family="Consolas, monospace" font-size="14">\usepackage{graphicx}</text>
+    <text x="748" y="310" fill="#D1D5DB" font-family="Consolas, monospace" font-size="14">\title{Project Notes}</text>
+    <text x="748" y="352" fill="#34D399" font-family="Consolas, monospace" font-size="14">\section{Introduction}</text>
+    <text x="748" y="380" fill="#E5E7EB" font-family="Consolas, monospace" font-size="14">NovaTeX keeps writing and output</text>
+    <text x="748" y="404" fill="#E5E7EB" font-family="Consolas, monospace" font-size="14">in the same focused workspace.</text>
+    <rect x="748" y="450" width="118" height="30" rx="15" fill="#052E1E"/>
+    <text x="776" y="470" fill="#86EFAC" font-family="Segoe UI, Arial, sans-serif" font-size="14">Compiled</text>
+
+    <rect x="930" y="178" width="160" height="340" rx="16" fill="url(#card)" stroke="#334155"/>
+    <rect x="960" y="216" width="100" height="128" rx="4" fill="#F8FAFC"/>
+    <rect x="976" y="238" width="68" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="976" y="256" width="54" height="8" rx="4" fill="#E2E8F0"/>
+    <rect x="976" y="288" width="68" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="976" y="306" width="52" height="8" rx="4" fill="#E2E8F0"/>
+    <rect x="976" y="338" width="68" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="976" y="356" width="46" height="8" rx="4" fill="#E2E8F0"/>
+    <text x="978" y="396" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Preview</text>
+  </g>
+</svg>

@@ -1,0 +1,85 @@
+.home-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-primary);
+  /* Make the background area draggable for the window */
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+}
+
+.home-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.home-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.home-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.recent-projects h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.project-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.project-list li {
+  background: var(--bg-secondary);
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  border: 1px solid var(--border-color);
+}
+
+.project-list li:hover {
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+
+.project-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.project-path {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

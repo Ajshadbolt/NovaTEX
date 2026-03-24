@@ -1,0 +1,146 @@
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-primary);
+}
+
+.editor-header {
+  height: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  /* App window drag region handled via data-tauri-drag-region */
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+.header-center {
+  flex: 2;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.project-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  opacity: 0.9;
+}
+
+.header-btn, .compile-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.header-btn:hover, .compile-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.compile-btn {
+  color: var(--accent);
+  border: 1px solid rgba(0, 122, 255, 0.3);
+  padding: 4px 12px;
+}
+
+.compile-btn:hover:not(:disabled) {
+  background: rgba(0, 122, 255, 0.1);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-muted);
+}
+
+.status-idle { background-color: var(--text-muted); }
+.status-compiling { background-color: #f5a623; animation: pulse 1s infinite; }
+.status-success { background-color: #28a745; }
+.status-error { background-color: var(--danger); }
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.editor-workspace {
+  position: relative;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Sidebar Hover Mechanics */
+.sidebar-hover-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 24px;
+  z-index: 100;
+}
+
+/* Expand the hover zone when sidebar is open so it doesn't close immediately if mouse moves slightly off */
+.sidebar-hover-zone:hover {
+  width: 280px;
+}
+
+.sidebar-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  transform: translateX(-100%);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow);
+  overflow-y: auto;
+  pointer-events: auto;
+}
+
+.sidebar-drawer.open {
+  transform: translateX(0);
+}
+
+.main-panels {
+  width: 100%;
+  height: 100%;
+}
+
+.custom-resizer {
+  width: 2px;
+  background: var(--border-color);
+  cursor: col-resize;
+  transition: background 0.15s ease;
+  z-index: 10;
+}
+
+.custom-resizer:hover, .custom-resizer[data-resize-handle-state="drag"] {
+  background: var(--accent);
+  width: 4px;
+  margin-left: -1px;
+}

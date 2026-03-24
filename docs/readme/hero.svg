@@ -38,21 +38,27 @@
   <text x="100" y="274" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="68" font-weight="700">NovaTeX</text>
   <text x="100" y="324" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="24">A focused LaTeX workspace for macOS</text>
 
-  <text x="100" y="392" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="22">Write, compile, and preview locally with a fast editor and side-by-side PDF output.</text>
-  <text x="100" y="428" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="22">Built with Tauri, React, and CodeMirror for a lightweight native-feeling desktop app.</text>
+  <text x="100" y="392" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="19">
+    <tspan x="100" dy="0">Write, compile, and preview locally with a fast editor</tspan>
+    <tspan x="100" dy="30">and side-by-side PDF output.</tspan>
+  </text>
+  <text x="100" y="454" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="19">
+    <tspan x="100" dy="0">Built with Tauri, React, and CodeMirror for a</tspan>
+    <tspan x="100" dy="30">lightweight native-feeling desktop app.</tspan>
+  </text>
 
   <g>
-    <rect x="100" y="488" width="170" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
-    <circle cx="128" cy="511" r="8" fill="#22C55E"/>
-    <text x="146" y="518" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Local-first</text>
+    <rect x="100" y="516" width="170" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
+    <circle cx="128" cy="539" r="8" fill="#22C55E"/>
+    <text x="146" y="546" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Local-first</text>
 
-    <rect x="284" y="488" width="210" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
-    <circle cx="312" cy="511" r="8" fill="#14B8A6"/>
-    <text x="330" y="518" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Native PDF preview</text>
+    <rect x="284" y="516" width="238" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
+    <circle cx="312" cy="539" r="8" fill="#14B8A6"/>
+    <text x="330" y="546" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Native PDF preview</text>
 
-    <rect x="100" y="550" width="222" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
-    <circle cx="128" cy="573" r="8" fill="#F59E0B"/>
-    <text x="146" y="580" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Cmd/Ctrl + Enter compile</text>
+    <rect x="100" y="578" width="296" height="46" rx="23" fill="#0B1220" stroke="#334155"/>
+    <circle cx="128" cy="601" r="8" fill="#F59E0B"/>
+    <text x="146" y="608" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="18">Cmd/Ctrl + Enter compile</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -68,25 +74,26 @@
     <text x="590" y="286" fill="#64748B" font-family="Consolas, monospace" font-size="16">figures/</text>
     <text x="590" y="318" fill="#64748B" font-family="Consolas, monospace" font-size="16">references.bib</text>
 
-    <rect x="724" y="178" width="188" height="340" rx="16" fill="#111827" stroke="#1F2937"/>
+    <rect x="724" y="178" width="216" height="340" rx="16" fill="#111827" stroke="#1F2937"/>
     <text x="748" y="214" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="15">main.tex</text>
-    <text x="748" y="254" fill="#60A5FA" font-family="Consolas, monospace" font-size="14">\documentclass{article}</text>
-    <text x="748" y="282" fill="#D1D5DB" font-family="Consolas, monospace" font-size="14">\usepackage{graphicx}</text>
-    <text x="748" y="310" fill="#D1D5DB" font-family="Consolas, monospace" font-size="14">\title{Project Notes}</text>
-    <text x="748" y="352" fill="#34D399" font-family="Consolas, monospace" font-size="14">\section{Introduction}</text>
-    <text x="748" y="380" fill="#E5E7EB" font-family="Consolas, monospace" font-size="14">NovaTeX keeps writing and output</text>
-    <text x="748" y="404" fill="#E5E7EB" font-family="Consolas, monospace" font-size="14">in the same focused workspace.</text>
+    <text x="748" y="252" fill="#60A5FA" font-family="Consolas, monospace" font-size="12">\documentclass{article}</text>
+    <text x="748" y="278" fill="#D1D5DB" font-family="Consolas, monospace" font-size="12">\usepackage{graphicx}</text>
+    <text x="748" y="304" fill="#D1D5DB" font-family="Consolas, monospace" font-size="12">\title{Project Notes}</text>
+    <text x="748" y="344" fill="#34D399" font-family="Consolas, monospace" font-size="12">\section{Introduction}</text>
+    <text x="748" y="374" fill="#E5E7EB" font-family="Consolas, monospace" font-size="12">NovaTeX keeps writing</text>
+    <text x="748" y="398" fill="#E5E7EB" font-family="Consolas, monospace" font-size="12">and output in the same</text>
+    <text x="748" y="422" fill="#E5E7EB" font-family="Consolas, monospace" font-size="12">focused workspace.</text>
     <rect x="748" y="450" width="118" height="30" rx="15" fill="#052E1E"/>
     <text x="776" y="470" fill="#86EFAC" font-family="Segoe UI, Arial, sans-serif" font-size="14">Compiled</text>
 
-    <rect x="930" y="178" width="160" height="340" rx="16" fill="url(#card)" stroke="#334155"/>
-    <rect x="960" y="216" width="100" height="128" rx="4" fill="#F8FAFC"/>
-    <rect x="976" y="238" width="68" height="8" rx="4" fill="#CBD5E1"/>
-    <rect x="976" y="256" width="54" height="8" rx="4" fill="#E2E8F0"/>
-    <rect x="976" y="288" width="68" height="8" rx="4" fill="#CBD5E1"/>
-    <rect x="976" y="306" width="52" height="8" rx="4" fill="#E2E8F0"/>
-    <rect x="976" y="338" width="68" height="8" rx="4" fill="#CBD5E1"/>
-    <rect x="976" y="356" width="46" height="8" rx="4" fill="#E2E8F0"/>
-    <text x="978" y="396" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Preview</text>
+    <rect x="958" y="178" width="132" height="340" rx="16" fill="url(#card)" stroke="#334155"/>
+    <rect x="980" y="222" width="86" height="110" rx="4" fill="#F8FAFC"/>
+    <rect x="994" y="246" width="58" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="994" y="266" width="46" height="8" rx="4" fill="#E2E8F0"/>
+    <rect x="994" y="296" width="58" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="994" y="316" width="42" height="8" rx="4" fill="#E2E8F0"/>
+    <rect x="994" y="346" width="58" height="8" rx="4" fill="#CBD5E1"/>
+    <rect x="994" y="366" width="40" height="8" rx="4" fill="#E2E8F0"/>
+    <text x="998" y="406" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="14">Preview</text>
   </g>
 </svg>

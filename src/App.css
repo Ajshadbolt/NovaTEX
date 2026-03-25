@@ -1,25 +1,26 @@
 :root {
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', 'Menlo', monospace;
   
-  --bg-primary: #121212;
-  --bg-secondary: #1a1a1a;
-  --bg-panel: #1e1e1e;
-  --bg-hover: #2c2c2e;
+  --bg-primary: #0d0f13;
+  --bg-secondary: #14171c;
+  --bg-panel: #171a20;
+  --bg-hover: #232831;
   
-  --border-color: #2c2c2e;
-  --border-radius: 6px;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color-strong: rgba(255, 255, 255, 0.12);
+  --border-radius: 10px;
   
-  --text-primary: #efefef;
-  --text-secondary: #a0a0a5;
-  --text-muted: #666666;
+  --text-primary: #f3f5f7;
+  --text-secondary: #b0b7c3;
+  --text-muted: #6d7582;
   
-  --accent: #007aff; /* macOS default blue */
-  --accent-hover: #0062cc;
+  --accent: #82a5ff;
+  --accent-hover: #9db7ff;
   --danger: #ff453a; 
   
   --transition: 0.15s ease-out;
-  --shadow: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
 }
 
 * {
@@ -31,7 +32,7 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  overflow: hidden; /* App feels native */
+  overflow: hidden;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -39,7 +40,6 @@ html, body, #root {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Base utility classes for layout */
 .app-container {
   display: flex;
   height: 100vh;
@@ -47,15 +47,13 @@ html, body, #root {
   flex-direction: column;
 }
 
-/* User selection color */
 ::selection {
-  background: rgba(0, 122, 255, 0.3);
+  background: rgba(130, 165, 255, 0.34);
 }
 
-/* Custom scrollbar for native dark feel */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
 }
 
 ::-webkit-scrollbar-track {
@@ -64,12 +62,14 @@ html, body, #root {
 
 ::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  border-radius: 6px;
-  border: 3px solid var(--bg-primary); /* creates padding around the thumb */
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+  background-clip: padding-box;
 }
 
 button {
@@ -78,11 +78,11 @@ button {
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: 8px 16px;
+  padding: 8px 14px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition), transform var(--transition);
   outline: none;
 }
 
@@ -90,9 +90,13 @@ button:hover {
   background: var(--bg-hover);
 }
 
+button:active {
+  transform: translateY(1px);
+}
+
 button.primary {
   background: var(--accent);
-  color: white;
+  color: #09111f;
   border-color: transparent;
 }
 
@@ -114,4 +118,9 @@ input {
 
 input:focus {
   border-color: var(--accent);
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-weight: 500;
 }

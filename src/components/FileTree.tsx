@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
-import { readDir, DirEntry } from '@tauri-apps/plugin-fs';
-import { Folder, FolderOpen, FileText, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { DirEntry, readDir } from '@tauri-apps/plugin-fs';
+import { ChevronRight, FileText, Folder, FolderOpen, RefreshCw } from 'lucide-react';
+import { sortDirEntries } from '../project/files';
 import './FileTree.css';
 
 export interface FileTreeProps {
   projectPath: string;
   activeFile: string;
+  refreshToken: number;
   onSelectFile: (file: string) => void;
+  onRefresh: () => void;
 }
 
-export function FileTree({ projectPath, activeFile, onSelectFile }: FileTreeProps) {
+export function FileTree({ projectPath, activeFile, refreshToken, onSelectFile, onRefresh }: FileTreeProps) {
   const [entries, setEntries] = useState<DirEntry[]>([]);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [subEntries, setSubEntries] = useState<Record<string, DirEntry[]>>({});
@@ -17,55 +20,47 @@ export function FileTree({ projectPath, activeFile, onSelectFile }: FileTreeProp
   useEffect(() => {
     async function loadTree() {
       try {
-        const result = await readDir(projectPath);
-        // Sort: folders first, then alphabetical
-        result.sort((a, b) => {
-          if (a.isDirectory && !b.isDirectory) return -1;
-          if (!a.isDirectory && b.isDirectory) return 1;
-          return a.name.localeCompare(b.name);
-        });
-        setEntries(result);
+        setEntries(sortDirEntries(await readDir(projectPath)));
+        setSubEntries({});
+        setExpandedFolders(new Set());
       } catch (e) {
         console.error("Failed to read dir", e);
       }
     }
-    loadTree();
-  }, [projectPath]);
+    void loadTree();
+  }, [projectPath, refreshToken]);
 
   const toggleFolder = async (folderPath: string) => {
-    const newExpanded = new Set(expandedFolders);
-    if (newExpanded.has(folderPath)) {
-      newExpanded.delete(folderPath);
-      setExpandedFolders(newExpanded);
-    } else {
-      newExpanded.add(folderPath);
-      setExpandedFolders(newExpanded);
-      if (!subEntries[folderPath]) {
-        try {
-          const result = await readDir(`${projectPath}/${folderPath}`);
-          result.sort((a, b) => {
-            if (a.isDirectory && !b.isDirectory) return -1;
-            if (!a.isDirectory && b.isDirectory) return 1;
-            return a.name.localeCompare(b.name);
-          });
-          setSubEntries(prev => ({ ...prev, [folderPath]: result }));
-        } catch (e) {
-          console.error(e);
-        }
+    const nextExpanded = new Set(expandedFolders);
+    if (nextExpanded.has(folderPath)) {
+      nextExpanded.delete(folderPath);
+      setExpandedFolders(nextExpanded);
+      return;
+    }
+
+    nextExpanded.add(folderPath);
+    setExpandedFolders(nextExpanded);
+
+    if (!subEntries[folderPath]) {
+      try {
+        const result = sortDirEntries(await readDir(`${projectPath}/${folderPath}`));
+        setSubEntries((prev) => ({ ...prev, [folderPath]: result }));
+      } catch (e) {
+        console.error(e);
       }
     }
   };
 
-  const renderEntry = (entry: DirEntry, pathPrefix: string = '') => {
+  const renderEntry = (entry: DirEntry, pathPrefix = '') => {
     const fullRelativePath = pathPrefix ? `${pathPrefix}/${entry.name}` : entry.name;
     const isSelected = activeFile === fullRelativePath;
-    
+
     if (entry.isDirectory) {
       const isExpanded = expandedFolders.has(fullRelativePath);
       const indentation = pathPrefix ? 24 : 8;
       return (
         <div key={fullRelativePath} style={{ marginBottom: '2px' }}>
-          <div 
+          <div
             className="file-tree-item"
             onClick={() => toggleFolder(fullRelativePath)}
             style={{ paddingLeft: `${indentation}px` }}
@@ -76,7 +71,7 @@ export function FileTree({ projectPath, activeFile, onSelectFile }: FileTreeProp
           </div>
           {isExpanded && subEntries[fullRelativePath] && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
-              {subEntries[fullRelativePath].map(sub => renderEntry(sub, fullRelativePath))}
+              {subEntries[fullRelativePath].map((sub) => renderEntry(sub, fullRelativePath))}
             </div>
           )}
         </div>
@@ -86,7 +81,7 @@ export function FileTree({ projectPath, activeFile, onSelectFile }: FileTreeProp
     const itemIndentation = pathPrefix ? (pathPrefix.split('/').length * 16 + 26) : 26;
 
     return (
-      <div 
+      <div
         key={fullRelativePath}
         className={`file-tree-item ${isSelected ? 'selected' : ''}`}
         onClick={() => onSelectFile(fullRelativePath)}
@@ -100,11 +95,14 @@ export function FileTree({ projectPath, activeFile, onSelectFile }: FileTreeProp
 
   return (
     <div className="file-tree-container">
-      <h4 className="file-tree-header">
-        Project Files
-      </h4>
+      <div className="file-tree-header-row">
+        <h4 className="file-tree-header">Project Files</h4>
+        <button className="file-tree-refresh" onClick={onRefresh} aria-label="Refresh project files">
+          <RefreshCw className="file-tree-icon" />
+        </button>
+      </div>
       <div className="file-tree-list">
-        {entries.map(e => renderEntry(e))}
+        {entries.map((entry) => renderEntry(entry))}
       </div>
     </div>
   );

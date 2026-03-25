@@ -1,0 +1,108 @@
+.pdf-preview-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(17, 19, 24, 0.98), rgba(12, 14, 18, 0.98));
+}
+
+.pdf-preview-header {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pdf-preview-title-group {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdf-preview-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pdf-preview-file {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.pdf-preview-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pdf-preview-zoom-label {
+  min-width: 48px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.pdf-preview-control {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.pdf-preview-stage {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+  position: relative;
+  text-align: center;
+  padding: 32px 24px 56px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.05), transparent 44%),
+    linear-gradient(180deg, #1a1d23 0%, #16191f 100%);
+}
+
+.pdf-preview-empty {
+  margin: auto;
+  max-width: 320px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.pdf-preview-empty-icon {
+  opacity: 0.5;
+  font-size: 44px;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.pdf-preview-page-shell {
+  margin-bottom: 26px;
+}
+
+.pdf-page-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.pdf-page-canvas {
+  box-shadow: 0 16px 42px rgba(3, 4, 7, 0.34);
+  border-radius: 6px;
+  background-color: white;
+}

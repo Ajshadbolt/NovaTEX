@@ -7,6 +7,8 @@ import './Home.css';
 interface HomeProps {
   recentProjects: ProjectMeta[];
   onOpenProject: (path: string) => void;
+  onRemoveProject: (path: string) => void;
+  message: string | null;
 }
 
 const TEMPLATE_MAIN_TEX = `\\documentclass{article}
@@ -26,7 +28,7 @@ Start writing your LaTeX document here. Type / to use slash commands.
 \\end{document}
 `;
 
-export function Home({ recentProjects, onOpenProject }: HomeProps) {
+export function Home({ recentProjects, onOpenProject, onRemoveProject, message }: HomeProps) {
   const [isCreating, setIsCreating] = React.useState(false);
 
   const handleOpenExisting = async () => {
@@ -59,8 +61,7 @@ export function Home({ recentProjects, onOpenProject }: HomeProps) {
         const fileExists = await exists(mainTexPath);
         if (!fileExists) {
           await writeTextFile(mainTexPath, TEMPLATE_MAIN_TEX);
-          // Create figures directory
-          await mkdir(`${selected}/figures`);
+          await mkdir(`${selected}/figures`, { recursive: true });
         }
         onOpenProject(selected);
       }
@@ -72,17 +73,20 @@ export function Home({ recentProjects, onOpenProject }: HomeProps) {
   };
 
   return (
-    <div className="home-container" data-tauri-drag-region>
+    <div className="home-container">
+      <div className="home-drag-strip" data-tauri-drag-region aria-hidden="true" />
       <div className="home-content">
-        <h1 className="home-title">LaTeX Editor</h1>
+        <h1 className="home-title">NovaTeX</h1>
         <p className="home-subtitle">Minimalist local workspace</p>
+
+        {message && <div className="home-message">{message}</div>}
         
         <div className="home-actions">
           <button className="primary action-btn" onClick={handleCreateNew} disabled={isCreating}>
             {isCreating ? 'Creating...' : 'New Project'}
           </button>
           <button className="action-btn" onClick={handleOpenExisting}>
-            Open Existing folder
+            Open Existing Folder
           </button>
         </div>
 
@@ -90,10 +94,19 @@ export function Home({ recentProjects, onOpenProject }: HomeProps) {
           <div className="recent-projects">
             <h3>Recent Projects</h3>
             <ul className="project-list">
-              {recentProjects.map(proj => (
-                <li key={proj.path} onClick={() => onOpenProject(proj.path)}>
-                  <div className="project-name">{proj.name}</div>
-                  <div className="project-path">{proj.path}</div>
+              {recentProjects.map((proj) => (
+                <li key={proj.path}>
+                  <button className="project-card" onClick={() => onOpenProject(proj.path)}>
+                    <div className="project-name">{proj.name}</div>
+                    <div className="project-path">{proj.path}</div>
+                  </button>
+                  <button
+                    className="project-remove"
+                    onClick={() => onRemoveProject(proj.path)}
+                    aria-label={`Remove ${proj.name} from recent projects`}
+                  >
+                    Remove
+                  </button>
                 </li>
               ))}
             </ul>

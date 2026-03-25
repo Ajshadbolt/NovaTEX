@@ -36,21 +36,34 @@ export const spellcheckLinter = linter((view) => {
   if (!typo) return diagnostics;
 
   const doc = view.state.doc;
+  const firstLine = doc.lineAt(Math.max(0, view.viewport.from)).number;
+  const lastLine = doc.lineAt(Math.min(doc.length, view.viewport.to)).number;
   // A simple regex to find sequences of alphabetical characters (words)
   const wordRegex = /[a-zA-Z']+/g;
+  const ignoredCommandRegex = /\\(?:cite|citet|citep|ref|eqref|label|includegraphics|bibliography|documentclass|usepackage|begin|end)\*?(?:\[[^\]]*\])?(?:\{[^}]*\})?/g;
 
-  // We only check the currently visible viewport to keep performance high
-  // But for a simple doc, we can check the whole thing or chunks. 
-  // Let's iterate over all text in the document line by line.
-  // To avoid lag on huge documents, you might want to slice `doc` or use view.viewport.
-  for (let i = 1; i <= doc.lines; i++) {
+  function stripComment(text: string) {
+    for (let index = 0; index < text.length; index += 1) {
+      if (text[index] === '%' && text[index - 1] !== '\\') {
+        return text.slice(0, index);
+      }
+    }
+
+    return text;
+  }
+
+  for (let i = Math.max(1, firstLine - 30); i <= Math.min(doc.lines, lastLine + 30); i++) {
     const line = doc.line(i);
+    const visibleText = stripComment(line.text)
+      .replace(/\$[^$]*\$/g, ' ')
+      .replace(ignoredCommandRegex, ' ');
+    wordRegex.lastIndex = 0;
     let match;
-    while ((match = wordRegex.exec(line.text)) !== null) {
+    while ((match = wordRegex.exec(visibleText)) !== null) {
       const word = match[0];
       
       // Skip words that are preceded directly by a backslash, as they are LaTeX macros/commands
-      const beforeMatch = line.text.slice(0, match.index);
+      const beforeMatch = visibleText.slice(0, match.index);
       if (beforeMatch.endsWith('\\')) continue;
 
       // Clean trailing/leading quotes

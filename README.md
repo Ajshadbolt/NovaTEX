@@ -90,7 +90,7 @@ Generated outputs include:
 
 - `dist/`
 - `src-tauri/target/release/bundle/macos/NovaTeX.app`
-- `src-tauri/target/release/bundle/dmg/NovaTeX_0.1.0_aarch64.dmg`
+- `src-tauri/target/release/bundle/dmg/NovaTeX_0.1.1_aarch64.dmg`
 
 ## Tech Stack
 

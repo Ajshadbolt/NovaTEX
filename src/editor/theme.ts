@@ -44,17 +44,64 @@ const baseTheme = EditorView.theme(
     ".cm-tooltip": {
       backgroundColor: "var(--bg-secondary)",
       border: "1px solid var(--border-color)",
-      borderRadius: "4px",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+      borderRadius: "8px",
+      boxShadow: "0 8px 24px rgba(0,0,0,0.55)",
+      overflow: "hidden",
     },
     ".cm-tooltip-autocomplete": {
+      padding: "4px 0",
+      "& > ul": {
+        maxHeight: "280px",
+        minWidth: "240px",
+        maxWidth: "440px",
+        overflowY: "auto",
+        scrollbarWidth: "thin",
+      },
       "& > ul > li": {
-        padding: "4px 8px",
+        display: "flex",
+        alignItems: "center",
+        padding: "5px 12px",
+        gap: "0",
+        cursor: "default",
+        lineHeight: "1.5",
+        fontSize: "13px",
       },
       "& > ul > li[aria-selected]": {
         backgroundColor: "var(--accent)",
         color: "white",
-      }
+      },
+      "& .cm-completionIcon": {
+        display: "none",
+      },
+      "& .cm-completionLabel": {
+        fontFamily: "ui-monospace, 'SF Mono', Menlo, monospace",
+        fontSize: "13px",
+        flex: "1",
+        minWidth: 0,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+      "& .cm-completionMatchedText": {
+        fontWeight: "700",
+        textDecoration: "none",
+      },
+      "& .cm-completionDetail": {
+        fontSize: "11px",
+        opacity: "0.55",
+        flexShrink: "0",
+        paddingLeft: "12px",
+        maxWidth: "160px",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+      "& > ul > li[aria-selected] .cm-completionDetail": {
+        opacity: "0.75",
+      },
+      "& > ul > li[aria-selected] .cm-completionMatchedText": {
+        textDecoration: "underline",
+      },
     }
   },
   { dark: true }

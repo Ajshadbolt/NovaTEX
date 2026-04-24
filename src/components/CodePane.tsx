@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
+import { keymap } from '@codemirror/view';
 import { EditorSelection } from '@codemirror/state';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { StreamLanguage } from '@codemirror/language';
@@ -13,6 +14,7 @@ import './CodePane.css';
 export interface CodePaneProps {
   projectPath: string;
   activeFile: string;
+  projectFiles: string[];
   refreshToken: number;
   jumpTarget: JumpTarget | null;
   registerFlushSave: (flush: () => Promise<void>) => void;
@@ -22,6 +24,7 @@ export interface CodePaneProps {
 export function CodePane({
   projectPath,
   activeFile,
+  projectFiles,
   refreshToken,
   jumpTarget,
   registerFlushSave,
@@ -144,8 +147,9 @@ export function CodePane({
     editorRef.current.focus();
   }, [activeFile, jumpTarget]);
 
-  const extensions = [
-    createSlashCommandExtension(),
+  const extensions = useMemo(() => [
+    keymap.of([{ key: "Mod-Enter", run: () => true }]),
+    createSlashCommandExtension(projectFiles),
     EditorView.lineWrapping,
     spellcheckExtension,
     StreamLanguage.define(stex),
@@ -153,10 +157,11 @@ export function CodePane({
       spellcheck: "true",
       autocorrect: "on",
       autocapitalize: "on",
-    })
-  ];
+    }),
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ], [projectFiles]);
 
-  const editorTheme = createEditorTheme(smoothMode);
+  const editorTheme = useMemo(() => createEditorTheme(smoothMode), [smoothMode]);
 
   return (
     <div className="code-pane">

@@ -466,6 +466,7 @@ export function Editor({ projectPath, onClose }: EditorProps) {
                 <CodePane
                   projectPath={projectPath}
                   activeFile={activeFile}
+                  projectFiles={projectFiles}
                   refreshToken={refreshToken}
                   jumpTarget={jumpTarget}
                   registerFlushSave={(flush) => setFlushSave(() => flush)}

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
-import { keymap } from '@codemirror/view';
 import { EditorSelection } from '@codemirror/state';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { StreamLanguage } from '@codemirror/language';
@@ -148,7 +147,6 @@ export function CodePane({
   }, [activeFile, jumpTarget]);
 
   const extensions = useMemo(() => [
-    keymap.of([{ key: "Mod-Enter", run: () => true }]),
     createSlashCommandExtension(projectFiles),
     EditorView.lineWrapping,
     spellcheckExtension,
@@ -184,6 +182,11 @@ export function CodePane({
         <div
           className="editor-content-wrapper code-pane-editor-shell"
           onContextMenu={(e) => e.stopPropagation()}
+          onKeyDownCapture={(e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+              e.preventDefault();
+            }
+          }}
           lang="en-GB"
         >
           <CodeMirror

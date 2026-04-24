@@ -39,6 +39,7 @@ async fn run_latex_build(target_dir: &str, file_name: &str) -> Result<BuildOutpu
         .env("PATH", &new_path)
         .current_dir(target_dir)
         .arg("-pdf")
+        .arg("-f")
         .arg("-interaction=nonstopmode")
         .arg("-halt-on-error")
         .arg("-synctex=1")

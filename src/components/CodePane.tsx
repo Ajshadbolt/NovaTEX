@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { EditorSelection } from '@codemirror/state';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
@@ -13,6 +13,7 @@ import './CodePane.css';
 export interface CodePaneProps {
   projectPath: string;
   activeFile: string;
+  projectFiles: string[];
   refreshToken: number;
   jumpTarget: JumpTarget | null;
   registerFlushSave: (flush: () => Promise<void>) => void;
@@ -22,6 +23,7 @@ export interface CodePaneProps {
 export function CodePane({
   projectPath,
   activeFile,
+  projectFiles,
   refreshToken,
   jumpTarget,
   registerFlushSave,
@@ -144,8 +146,8 @@ export function CodePane({
     editorRef.current.focus();
   }, [activeFile, jumpTarget]);
 
-  const extensions = [
-    createSlashCommandExtension(),
+  const extensions = useMemo(() => [
+    createSlashCommandExtension(projectFiles),
     EditorView.lineWrapping,
     spellcheckExtension,
     StreamLanguage.define(stex),
@@ -153,10 +155,11 @@ export function CodePane({
       spellcheck: "true",
       autocorrect: "on",
       autocapitalize: "on",
-    })
-  ];
+    }),
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ], [projectFiles]);
 
-  const editorTheme = createEditorTheme(smoothMode);
+  const editorTheme = useMemo(() => createEditorTheme(smoothMode), [smoothMode]);
 
   return (
     <div className="code-pane">
@@ -179,6 +182,11 @@ export function CodePane({
         <div
           className="editor-content-wrapper code-pane-editor-shell"
           onContextMenu={(e) => e.stopPropagation()}
+          onKeyDownCapture={(e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+              e.preventDefault();
+            }
+          }}
           lang="en-GB"
         >
           <CodeMirror

@@ -2,6 +2,41 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
+struct LatexCheckResult {
+    latexmk: bool,
+    pdflatex: bool,
+}
+
+fn check_binary(name: &str) -> bool {
+    let dirs = [
+        "/Library/TeX/texbin",
+        "/opt/homebrew/bin",
+        "/usr/local/bin",
+        "/usr/bin",
+        "/bin",
+    ];
+    for dir in dirs.iter() {
+        if std::path::Path::new(dir).join(name).exists() {
+            return true;
+        }
+    }
+    std::process::Command::new("which")
+        .arg(name)
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+#[tauri::command]
+async fn check_latex() -> LatexCheckResult {
+    LatexCheckResult {
+        latexmk: check_binary("latexmk"),
+        pdflatex: check_binary("pdflatex"),
+    }
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct BuildOutput {
     engine: String,
     log: String,
@@ -104,7 +139,7 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![run_latex_build, read_file_bytes])
+        .invoke_handler(tauri::generate_handler![run_latex_build, read_file_bytes, check_latex])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

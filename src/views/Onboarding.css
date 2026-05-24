@@ -1,0 +1,350 @@
+/* ───────────────────────────────────────────────────────────
+   Root & background
+──────────────────────────────────────────────────────────── */
+.ob-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.ob-drag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  -webkit-app-region: drag;
+  app-region: drag;
+  z-index: 10;
+}
+
+/* Luminous blobs behind the card — makes backdrop-filter visible */
+.ob-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(72px);
+}
+
+.ob-blob-1 {
+  width: 560px;
+  height: 560px;
+  top: -160px;
+  right: -140px;
+  background: radial-gradient(circle, rgba(56, 100, 200, 0.22) 0%, transparent 65%);
+  animation: ob-breathe 8s ease-in-out infinite alternate;
+}
+
+.ob-blob-2 {
+  width: 480px;
+  height: 480px;
+  bottom: -140px;
+  left: -120px;
+  background: radial-gradient(circle, rgba(38, 178, 160, 0.18) 0%, transparent 65%);
+  animation: ob-breathe 10s 2s ease-in-out infinite alternate;
+}
+
+@keyframes ob-breathe {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.08) translate(10px, -10px); }
+}
+
+/* ───────────────────────────────────────────────────────────
+   Glass card
+──────────────────────────────────────────────────────────── */
+.ob-card {
+  position: relative;
+  width: 420px;
+  border-radius: 28px;
+  background: rgba(14, 18, 26, 0.76);
+  backdrop-filter: blur(64px) saturate(1.5);
+  -webkit-backdrop-filter: blur(64px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.072);
+  box-shadow:
+    0 56px 110px rgba(0, 0, 0, 0.68),
+    0 0 0 0.5px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.062);
+  overflow: hidden;
+  animation: ob-card-in 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Subtle top-edge highlight line on the card */
+.ob-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+@keyframes ob-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.975);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────
+   Phase wrappers
+──────────────────────────────────────────────────────────── */
+.ob-phase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 62px 52px 58px;
+  animation: ob-phase-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ob-phase-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────
+   Welcome phase
+──────────────────────────────────────────────────────────── */
+.ob-mark {
+  margin-bottom: 28px;
+  animation: ob-phase-in 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+  filter: drop-shadow(0 8px 24px rgba(38, 178, 160, 0.22));
+}
+
+.ob-title {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 14px;
+  background: linear-gradient(150deg, #f3f5f7 0%, rgba(200, 212, 235, 0.72) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: ob-phase-in 0.8s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ob-subtitle {
+  font-size: 15px;
+  color: rgba(176, 183, 195, 0.6);
+  letter-spacing: 0.1px;
+  animation: ob-phase-in 0.7s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ───────────────────────────────────────────────────────────
+   Checking phase
+──────────────────────────────────────────────────────────── */
+.ob-spinner {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid rgba(255, 255, 255, 0.07);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: ob-spin 0.75s linear infinite;
+  margin-bottom: 32px;
+}
+
+@keyframes ob-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ───────────────────────────────────────────────────────────
+   Shared heading / body
+──────────────────────────────────────────────────────────── */
+.ob-heading {
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.ob-body {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 280px;
+}
+
+.ob-body-missing {
+  margin-bottom: 4px;
+}
+
+/* ───────────────────────────────────────────────────────────
+   Ready phase
+──────────────────────────────────────────────────────────── */
+.ob-check-icon {
+  width: 56px;
+  height: 56px;
+  color: #34c759;
+  margin-bottom: 28px;
+  filter: drop-shadow(0 0 16px rgba(52, 199, 89, 0.28));
+}
+
+.ob-check-circle {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: ob-draw-circle 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.ob-check-path {
+  stroke-dasharray: 80;
+  stroke-dashoffset: 80;
+  animation: ob-draw-check 0.45s 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes ob-draw-circle {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ob-draw-check {
+  to { stroke-dashoffset: 0; }
+}
+
+.ob-cta {
+  margin-top: 34px;
+  padding: 13px 34px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  background: var(--accent);
+  color: #08111e;
+  border: none;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 20px rgba(130, 165, 255, 0.28);
+}
+
+.ob-cta:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 6px 28px rgba(130, 165, 255, 0.38);
+}
+
+.ob-cta:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 12px rgba(130, 165, 255, 0.18);
+}
+
+/* ───────────────────────────────────────────────────────────
+   Missing / install phase
+──────────────────────────────────────────────────────────── */
+.ob-warn-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 159, 10, 0.1);
+  border: 1px solid rgba(255, 159, 10, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff9f0a;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 0 14px rgba(255, 159, 10, 0.18));
+}
+
+.ob-install {
+  width: 100%;
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+.ob-install-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ob-install-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.55px;
+  color: var(--text-muted);
+}
+
+.ob-code-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.ob-code {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: text;
+  -webkit-user-select: text;
+  min-width: 0;
+}
+
+.ob-copy-btn {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  min-width: 44px;
+}
+
+.ob-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.ob-retry {
+  margin-top: 30px;
+  padding: 11px 30px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 12px;
+  background: rgba(130, 165, 255, 0.08);
+  border: 1px solid rgba(130, 165, 255, 0.22);
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ob-retry:hover {
+  background: rgba(130, 165, 255, 0.14);
+  border-color: rgba(130, 165, 255, 0.35);
+}
+
+.ob-retry:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

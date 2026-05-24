@@ -11,21 +11,91 @@ interface HomeProps {
   message: string | null;
 }
 
-const TEMPLATE_MAIN_TEX = `\\documentclass{article}
-\\usepackage{graphicx}
-\\usepackage{amsmath}
+const TEMPLATE_MAIN_TEX = `\\documentclass[12pt,a4paper]{article}
 
-\\title{My New Document}
-\\author{}
+% Core packages
+\\usepackage[T1]{fontenc}
+\\usepackage[utf8]{inputenc}
+\\usepackage[english]{babel}
+\\usepackage[a4paper,margin=2.5cm]{geometry}
+
+% Math
+\\usepackage{amsmath}
+\\usepackage{amssymb}
+
+% Graphics
+\\usepackage{graphicx}
+
+% Hyperlinks
+\\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\\title{Document Title}
+\\author{Author Name}
 \\date{\\today}
 
 \\begin{document}
+
 \\maketitle
 
+\\begin{abstract}
+Write your abstract here.
+\\end{abstract}
+
 \\section{Introduction}
-Start writing your LaTeX document here. Type / to use slash commands.
+Your introduction goes here. You can cite references like this~\\cite{example2023}.
+
+\\section{Methods}
+
+\\subsection{Mathematical Notation}
+Inline math: $E = mc^2$. Display equation:
+\\begin{equation}
+  \\nabla^2 \\phi = 0
+\\end{equation}
+
+\\subsection{Including a Figure}
+\\begin{figure}[h]
+  \\centering
+  % \\includegraphics[width=0.5\\textwidth]{figures/example.png}
+  \\caption{Caption for your figure.}
+  \\label{fig:example}
+\\end{figure}
+
+\\subsection{Tables}
+\\begin{table}[h]
+  \\centering
+  \\begin{tabular}{lcc}
+    \\hline
+    Column 1 & Column 2 & Column 3 \\\\
+    \\hline
+    Row 1    & Value    & Value    \\\\
+    Row 2    & Value    & Value    \\\\
+    \\hline
+  \\end{tabular}
+  \\caption{Caption for your table.}
+  \\label{tab:example}
+\\end{table}
+
+\\section{Results}
+Present your findings here.
+
+\\section{Conclusion}
+Summarise your work here.
+
+\\bibliographystyle{plain}
+\\bibliography{references}
 
 \\end{document}
+`;
+
+const TEMPLATE_REFERENCES_BIB = `@article{example2023,
+  author  = {Smith, John and Jones, Jane},
+  title   = {An Example Article Title},
+  journal = {Example Journal},
+  year    = {2023},
+  volume  = {1},
+  number  = {1},
+  pages   = {1--10}
+}
 `;
 
 export function Home({ recentProjects, onOpenProject, onRemoveProject, message }: HomeProps) {
@@ -61,6 +131,7 @@ export function Home({ recentProjects, onOpenProject, onRemoveProject, message }
         const fileExists = await exists(mainTexPath);
         if (!fileExists) {
           await writeTextFile(mainTexPath, TEMPLATE_MAIN_TEX);
+          await writeTextFile(`${selected}/references.bib`, TEMPLATE_REFERENCES_BIB);
           await mkdir(`${selected}/figures`, { recursive: true });
         }
         onOpenProject(selected);

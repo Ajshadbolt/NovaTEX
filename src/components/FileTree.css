@@ -22,15 +22,29 @@
   padding-left: 8px;
 }
 
-.file-tree-refresh {
+.file-tree-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.file-tree-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   padding: 0;
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: transparent;
+  opacity: 0.6;
+  transition: opacity 0.14s ease, background-color 0.14s ease;
+}
+
+.file-tree-action-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .file-tree-list {
@@ -84,9 +98,76 @@
   height: 14px;
   opacity: 0.6;
   transition: transform 0.15s ease;
-  margin-right: -2px; /* Pull it slightly closer to the folder icon */
+  margin-right: -2px;
 }
 
 .file-tree-chevron.expanded {
   transform: rotate(90deg);
+}
+
+.file-tree-inline-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(130, 165, 255, 0.5);
+  color: var(--text-primary);
+  font-size: 12.5px;
+  font-family: inherit;
+  outline: none;
+  padding: 1px 2px;
+  cursor: text;
+}
+
+.file-tree-inline-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Context menu */
+.file-tree-context-menu {
+  position: fixed;
+  z-index: 1000;
+  background: var(--surface-raised, #1e2030);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 150px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.file-tree-context-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: var(--text-secondary);
+  transition: background 0.1s ease, color 0.1s ease;
+  text-align: left;
+}
+
+.file-tree-context-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-primary);
+}
+
+.file-tree-context-item.danger:hover {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff7b7b;
+}
+
+.file-tree-context-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 3px 0;
 }

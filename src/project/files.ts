@@ -1,4 +1,4 @@
-import { DirEntry, readDir } from '@tauri-apps/plugin-fs';
+import { DirEntry, readDir, readTextFile } from '@tauri-apps/plugin-fs';
 
 export function sortDirEntries(entries: DirEntry[]): DirEntry[] {
   return [...entries].sort((a, b) => {
@@ -31,4 +31,50 @@ export async function listProjectFiles(projectPath: string): Promise<string[]> {
   }
 
   return walk();
+}
+
+const LABEL_RE = /\\label\{([^}]+)\}/g;
+const BIBKEY_RE = /@\w+\s*\{\s*([^,\s}]+)/g;
+
+export async function extractLabelsFromTexFiles(
+  projectPath: string,
+  texFiles: string[],
+  excludeFile?: string,
+): Promise<string[]> {
+  const set = new Set<string>();
+  await Promise.all(
+    texFiles
+      .filter((f) => f !== excludeFile)
+      .map(async (file) => {
+        try {
+          const text = await readTextFile(`${projectPath}/${file}`);
+          LABEL_RE.lastIndex = 0;
+          let m: RegExpExecArray | null;
+          while ((m = LABEL_RE.exec(text)) !== null) set.add(m[1]);
+        } catch {
+          // ignore unreadable files
+        }
+      }),
+  );
+  return Array.from(set);
+}
+
+export async function extractBibCitations(
+  projectPath: string,
+  bibFiles: string[],
+): Promise<string[]> {
+  const set = new Set<string>();
+  await Promise.all(
+    bibFiles.map(async (file) => {
+      try {
+        const text = await readTextFile(`${projectPath}/${file}`);
+        BIBKEY_RE.lastIndex = 0;
+        let m: RegExpExecArray | null;
+        while ((m = BIBKEY_RE.exec(text)) !== null) set.add(m[1]);
+      } catch {
+        // ignore unreadable files
+      }
+    }),
+  );
+  return Array.from(set);
 }

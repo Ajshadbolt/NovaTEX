@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { EditorSelection } from '@codemirror/state';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
@@ -14,29 +14,46 @@ export interface CodePaneProps {
   projectPath: string;
   activeFile: string;
   projectFiles: string[];
+  extraLabels: string[];
+  bibCitations: string[];
   refreshToken: number;
   jumpTarget: JumpTarget | null;
   registerFlushSave: (flush: () => Promise<void>) => void;
   smoothMode: boolean;
 }
 
-export function CodePane({
+function CodePaneInner({
   projectPath,
   activeFile,
   projectFiles,
+  extraLabels,
+  bibCitations,
   refreshToken,
   jumpTarget,
   registerFlushSave,
   smoothMode,
 }: CodePaneProps) {
-  const [content, setContent] = useState('');
+  // `loadedContent` only changes when a file is loaded — never on keystrokes.
+  // This stops `<CodeMirror value={...}>` from doing O(doc) work every keystroke.
+  const [loadedContent, setLoadedContent] = useState('');
   const [isDirty, setIsDirty] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingSaveRef = useRef<{ path: string; content: string } | null>(null);
   const currentFilePathRef = useRef('');
   const latestContentRef = useRef('');
+  const isDirtyRef = useRef(false);
   const editorRef = useRef<EditorView | null>(null);
+
+  // Refs that the completion source reads lazily — updating these does not
+  // force CodeMirror to reconfigure.
+  const projectFilesRef = useRef<string[]>(projectFiles);
+  const extraLabelsRef = useRef<string[]>(extraLabels);
+  const bibCitationsRef = useRef<string[]>(bibCitations);
+  useEffect(() => { projectFilesRef.current = projectFiles; }, [projectFiles]);
+  useEffect(() => { extraLabelsRef.current = extraLabels; }, [extraLabels]);
+  useEffect(() => { bibCitationsRef.current = bibCitations; }, [bibCitations]);
 
   const currentFilePath = activeFile ? `${projectPath}/${activeFile}` : '';
 
@@ -52,10 +69,11 @@ export function CodePane({
       pendingSaveRef.current = null;
 
       if (currentFilePathRef.current === targetPath && latestContentRef.current === nextContent) {
+        isDirtyRef.current = false;
         setIsDirty(false);
       }
     } catch (e) {
-      console.error("Failed to save file", e);
+      console.error('Failed to save file', e);
     }
   }, []);
 
@@ -64,11 +82,12 @@ export function CodePane({
       try {
         setLoadError(null);
         const text = await readTextFile(currentFilePath);
-        setContent(text);
         latestContentRef.current = text;
+        isDirtyRef.current = false;
         setIsDirty(false);
+        setLoadedContent(text);
       } catch (e) {
-        console.error("Failed to read file", e);
+        console.error('Failed to read file', e);
         setLoadError(String(e));
       }
     }
@@ -117,19 +136,23 @@ export function CodePane({
       return;
     }
 
-    if (isDirty && currentFilePathRef.current) {
+    if (isDirtyRef.current && currentFilePathRef.current) {
       await persistContent(currentFilePathRef.current, latestContentRef.current);
     }
-  }, [isDirty, persistContent]);
+  }, [persistContent]);
 
   useEffect(() => {
     registerFlushSave(flushPendingSave);
   }, [flushPendingSave, registerFlushSave]);
 
+  // Keystroke hot path. Avoid React state updates here; only the dirty flag
+  // ever needs to flip (and only once per save cycle).
   const onChange = useCallback((value: string) => {
-    setContent(value);
     latestContentRef.current = value;
-    setIsDirty(true);
+    if (!isDirtyRef.current) {
+      isDirtyRef.current = true;
+      setIsDirty(true);
+    }
     scheduleSave(value);
   }, [scheduleSave]);
 
@@ -146,15 +169,21 @@ export function CodePane({
     editorRef.current.focus();
   }, [activeFile, jumpTarget]);
 
+  // Extensions are stable for the life of the editor instance. Cross-file
+  // data is read through getter refs so it can update without reconfiguring.
   const extensions = useMemo(() => [
-    createSlashCommandExtension(projectFiles),
+    createSlashCommandExtension({
+      projectFiles,
+      getExtraLabels: () => extraLabelsRef.current,
+      getBibCitations: () => bibCitationsRef.current,
+    }),
     EditorView.lineWrapping,
     spellcheckExtension,
     StreamLanguage.define(stex),
     EditorView.contentAttributes.of({
-      spellcheck: "true",
-      autocorrect: "on",
-      autocapitalize: "on",
+      spellcheck: 'true',
+      autocorrect: 'on',
+      autocapitalize: 'on',
     }),
   // eslint-disable-next-line react-hooks/exhaustive-deps
   ], [projectFiles]);
@@ -191,7 +220,7 @@ export function CodePane({
         >
           <CodeMirror
             key={`${activeFile}:${smoothMode ? 'smooth' : 'standard'}`}
-            value={content}
+            value={loadedContent}
             theme={editorTheme}
             extensions={extensions}
             onChange={onChange}
@@ -213,3 +242,5 @@ export function CodePane({
     </div>
   );
 }
+
+export const CodePane = memo(CodePaneInner);

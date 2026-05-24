@@ -150,6 +150,10 @@ const IMAGE_EXTS = new Set([".png", ".jpg", ".jpeg", ".pdf", ".eps", ".svg", ".g
 const TEX_FILE_CMDS = new Set(["input", "include"]);
 const BIB_CMDS = new Set(["bibliography", "addbibresource"]);
 const REF_CMDS = new Set(["ref", "eqref", "pageref", "autoref", "nameref", "cref", "Cref"]);
+const CITE_CMDS = new Set([
+  "cite", "citep", "citet", "citeyear", "citeyearpar", "citeauthor",
+  "citealp", "citealt", "Citep", "Citet", "nocite", "fullcite", "textcite", "parencite",
+]);
 
 function extractLabels(doc: string): string[] {
   const labels: string[] = [];
@@ -178,7 +182,26 @@ function getEnclosingCommand(docText: string, pos: number): string | null {
   return null;
 }
 
-export function createSlashCommandExtension(projectFiles: string[] = []): Extension {
+export interface SlashCommandConfig {
+  /** All project file paths (relative). Used for image/.tex/.bib argument completions. */
+  projectFiles?: string[];
+  /** Returns labels gathered from other tex files in the project. */
+  getExtraLabels?: () => string[];
+  /** Returns citation keys gathered from .bib files in the project. */
+  getBibCitations?: () => string[];
+}
+
+export function createSlashCommandExtension(
+  configOrFiles: SlashCommandConfig | string[] = {},
+): Extension {
+  // Back-compat: allow passing string[] directly
+  const config: SlashCommandConfig = Array.isArray(configOrFiles)
+    ? { projectFiles: configOrFiles }
+    : configOrFiles;
+  const projectFiles = config.projectFiles ?? [];
+  const getExtraLabels = config.getExtraLabels ?? (() => []);
+  const getBibCitations = config.getBibCitations ?? (() => []);
+
   function completionSource(context: CompletionContext): CompletionResult | null {
     // Backslash-triggered command/snippet completions
     const cmdMatch = context.matchBefore(/\\[a-zA-Z*]*/);
@@ -186,9 +209,11 @@ export function createSlashCommandExtension(projectFiles: string[] = []): Extens
       return { from: cmdMatch.from, options: SNIPPETS, filter: true };
     }
 
-    // Context-aware argument completions
-    const docText = context.state.doc.toString();
-    const cmd = getEnclosingCommand(docText, context.pos);
+    // Only stringify a small window around the cursor — avoids O(doc) work on
+    // each trigger for large documents.
+    const windowStart = Math.max(0, context.pos - 300);
+    const slice = context.state.sliceDoc(windowStart, context.pos);
+    const cmd = getEnclosingCommand(slice, slice.length);
     if (!cmd) return null;
 
     // Match partial text already typed inside the braces
@@ -200,11 +225,24 @@ export function createSlashCommandExtension(projectFiles: string[] = []): Extens
     }
 
     if (REF_CMDS.has(cmd)) {
-      const labels = extractLabels(docText);
-      if (!labels.length) return null;
+      // Labels in current doc (full scan needed) + cross-file labels.
+      const docText = context.state.doc.toString();
+      const inDoc = extractLabels(docText);
+      const merged = Array.from(new Set([...inDoc, ...getExtraLabels()]));
+      if (!merged.length) return null;
       return {
         from,
-        options: labels.map((l) => ({ label: l, detail: "label", type: "variable" })),
+        options: merged.map((l) => ({ label: l, detail: "label", type: "variable" })),
+        filter: true,
+      };
+    }
+
+    if (CITE_CMDS.has(cmd)) {
+      const keys = getBibCitations();
+      if (!keys.length) return null;
+      return {
+        from,
+        options: keys.map((k) => ({ label: k, detail: "citation", type: "variable" })),
         filter: true,
       };
     }

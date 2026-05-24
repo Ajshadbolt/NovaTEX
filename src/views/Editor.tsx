@@ -10,7 +10,12 @@ import { FileTree } from '../components/FileTree';
 import { PdfPreview } from '../components/PdfPreview';
 import { parseLatexIssues } from '../editor/latexLog';
 import { formatShortcut, matchesShortcut } from '../editor/shortcuts';
-import { listProjectFiles, listTexFiles } from '../project/files';
+import {
+  extractBibCitations,
+  extractLabelsFromTexFiles,
+  listProjectFiles,
+  listTexFiles,
+} from '../project/files';
 import { BuildIssue, BuildResult, CommandDefinition, JumpTarget } from '../types';
 import './Editor.css';
 
@@ -32,6 +37,8 @@ export function Editor({ projectPath, onClose }: EditorProps) {
   const [mainFile, setMainFile] = useState('');
   const [texFiles, setTexFiles] = useState<string[]>([]);
   const [projectFiles, setProjectFiles] = useState<string[]>([]);
+  const [crossFileLabels, setCrossFileLabels] = useState<string[]>([]);
+  const [bibCitations, setBibCitations] = useState<string[]>([]);
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   const [isSidebarPinned, setIsSidebarPinned] = useState(true);
   const [isFocusMode, setIsFocusMode] = useState(false);
@@ -42,6 +49,9 @@ export function Editor({ projectPath, onClose }: EditorProps) {
   const [buildPanelOpen, setBuildPanelOpen] = useState(false);
   const [jumpTarget, setJumpTarget] = useState<JumpTarget | null>(null);
   const [flushSave, setFlushSave] = useState<() => Promise<void>>(() => async () => {});
+  const registerFlushSave = useCallback((flush: () => Promise<void>) => {
+    setFlushSave(() => flush);
+  }, []);
   const [overlayMode, setOverlayMode] = useState<OverlayMode>(null);
   const [paletteScope, setPaletteScope] = useState<PaletteScope>('all');
   const [pdfZoom, setPdfZoom] = useState(INITIAL_PDF_ZOOM);
@@ -87,6 +97,25 @@ export function Editor({ projectPath, onClose }: EditorProps) {
   useEffect(() => {
     void loadProjectFiles();
   }, [loadProjectFiles, refreshToken]);
+
+  // Scan all .tex files for \label{...} and all .bib files for citation keys
+  // so completions inside \ref{}, \cite{} etc. work across the whole project.
+  useEffect(() => {
+    let cancelled = false;
+    async function scan() {
+      const texFiles = projectFiles.filter((f) => f.toLowerCase().endsWith('.tex'));
+      const bibFiles = projectFiles.filter((f) => f.toLowerCase().endsWith('.bib'));
+      const [labels, citations] = await Promise.all([
+        extractLabelsFromTexFiles(projectPath, texFiles, activeFile),
+        extractBibCitations(projectPath, bibFiles),
+      ]);
+      if (cancelled) return;
+      setCrossFileLabels(labels);
+      setBibCitations(citations);
+    }
+    if (projectFiles.length) void scan();
+    return () => { cancelled = true; };
+  }, [projectFiles, projectPath, activeFile, refreshToken]);
 
   useEffect(() => {
     if (mainFile) {
@@ -467,9 +496,11 @@ export function Editor({ projectPath, onClose }: EditorProps) {
                   projectPath={projectPath}
                   activeFile={activeFile}
                   projectFiles={projectFiles}
+                  extraLabels={crossFileLabels}
+                  bibCitations={bibCitations}
                   refreshToken={refreshToken}
                   jumpTarget={jumpTarget}
-                  registerFlushSave={(flush) => setFlushSave(() => flush)}
+                  registerFlushSave={registerFlushSave}
                   smoothMode={smoothMode}
                 />
               </div>
